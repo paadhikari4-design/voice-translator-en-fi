@@ -59,6 +59,7 @@ function startListening() {
         recognition.start();
         isListening = true;
         micBtn.classList.add('listening');
+        micBtn.style.boxShadow = '0 0 30px rgba(255, 0, 127, 0.5)';
         statusMsg.textContent = 'Listening... Speak now';
         transcriptP.classList.remove('placeholder');
         translationP.classList.remove('placeholder');
@@ -111,7 +112,7 @@ async function translateText(text) {
         translationP.textContent = 'Translating...';
         const response = await fetch(apiUrl);
         const data = await response.json();
-        
+
         if (data.responseData) {
             translationP.textContent = data.responseData.translatedText;
         } else {
