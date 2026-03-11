@@ -17,10 +17,24 @@ const langToggle = document.getElementById('language-toggle');
 const labelEn = document.getElementById('label-en');
 const labelFi = document.getElementById('label-fi');
 const outputHeader = document.querySelector('.output-block h3');
+const videoFeed = document.getElementById('video-feed');
+const subtitleText = document.getElementById('subtitle-text');
 
 let isListening = false;
 let sourceLang = 'en-US';
 let targetLang = 'fi';
+let stream = null;
+
+// Camera initialization
+const initCamera = async () => {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        videoFeed.srcObject = stream;
+    } catch (err) {
+        console.error("Camera access denied:", err);
+        statusMsg.textContent = "Camera error. Check permissions.";
+    }
+};
 
 // Language configuration
 const updateLanguageConfig = () => {
@@ -44,6 +58,9 @@ const updateLanguageConfig = () => {
 
 langToggle.addEventListener('change', updateLanguageConfig);
 updateLanguageConfig();
+
+// Initialize camera on load
+initCamera();
 
 // Microphone toggle
 micBtn.addEventListener('click', () => {
@@ -87,6 +104,7 @@ recognition.onresult = (event) => {
             translateText(finalTranscript);
         } else {
             interimTranscript += transcript;
+            subtitleText.textContent = interimTranscript; // Show interim speech as subtitles
         }
     }
 
@@ -102,7 +120,6 @@ recognition.onerror = (event) => {
 };
 
 // Translation Logic
-// Using MyMemory API (free, no key required for moderate use)
 async function translateText(text) {
     if (!text.trim()) return;
 
@@ -114,7 +131,9 @@ async function translateText(text) {
         const data = await response.json();
 
         if (data.responseData) {
-            translationP.textContent = data.responseData.translatedText;
+            const translated = data.responseData.translatedText;
+            translationP.textContent = translated;
+            subtitleText.textContent = translated; // Update subtitle with translation
         } else {
             translationP.textContent = 'Translation error. Please try again.';
         }
