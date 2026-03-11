@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceFlow - Real-time EN ↔ FI Translator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    
+    <main class="translator-card">
+        <header>
+            <div class="logo">
+                <span class="icon">🎙️</span>
+                <h1>VoiceFlow</h1>
+            </div>
+            <div class="toggle-container">
+                <span id="label-en" class="toggle-label active">English</span>
+                <label class="switch">
+                    <input type="checkbox" id="language-toggle">
+                    <span class="slider round"></span>
+                </label>
+                <span id="label-fi" class="toggle-label">Finnish</span>
+            </div>
+        </header>
+
+        <section class="display-area">
+            <div class="input-block">
+                <h3>Original Speech</h3>
+                <p id="transcript-text" class="placeholder">Waiting for speech...</p>
+            </div>
+            <div class="output-block">
+                <h3>Translation (Finnish)</h3>
+                <p id="translation-text" class="placeholder">Translation will appear here...</p>
+            </div>
+        </section>
+
+        <footer>
+            <div class="mic-controls">
+                <button id="mic-btn" class="mic-btn" aria-label="Start Listening">
+                    <div class="pulse"></div>
+                    <span class="mic-icon">🎤</span>
+                </button>
+                <p id="status-msg">Click to start listening</p>
+            </div>
+        </footer>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
