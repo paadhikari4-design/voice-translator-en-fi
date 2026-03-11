@@ -19,6 +19,8 @@ const labelFi = document.getElementById('label-fi');
 const outputHeader = document.querySelector('.output-block h3');
 const videoFeed = document.getElementById('video-feed');
 const subtitleText = document.getElementById('subtitle-text');
+const cameraError = document.getElementById('camera-error');
+const retryCameraBtn = document.getElementById('retry-camera');
 
 let isListening = false;
 let sourceLang = 'en-US';
@@ -27,14 +29,47 @@ let stream = null;
 
 // Camera initialization
 const initCamera = async () => {
+    // Check if browser supports mediaDevices
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        showCameraError("Your browser doesn't support camera access. Use Chrome or Edge.");
+        return;
+    }
+
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        // Stop previous stream if exists
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
+            },
+            audio: false
+        });
         videoFeed.srcObject = stream;
+        cameraError.classList.add('hidden');
     } catch (err) {
-        console.error("Camera access denied:", err);
-        statusMsg.textContent = "Camera error. Check permissions.";
+        console.error("Camera access error:", err.name, err.message);
+        let msg = "Camera access denied.";
+        if (err.name === 'NotAllowedError') msg = "Permission denied. Please allow camera access.";
+        else if (err.name === 'NotFoundError') msg = "No camera found on this device.";
+        else if (err.name === 'NotReadableError') msg = "Camera is already in use by another app.";
+        else if (err.name === 'SecurityError') msg = "Security error. Please use localhost or HTTPS.";
+
+        showCameraError(msg);
     }
 };
+
+const showCameraError = (message) => {
+    cameraError.classList.remove('hidden');
+    cameraError.querySelector('p').textContent = message;
+};
+
+retryCameraBtn.addEventListener('click', () => {
+    initCamera();
+});
 
 // Language configuration
 const updateLanguageConfig = () => {

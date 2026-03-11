@@ -32,6 +32,10 @@
 
         <section class="video-container">
             <video id="video-feed" autoplay playsinline muted></video>
+            <div id="camera-error" class="camera-error hidden">
+                <p>Camera access failed</p>
+                <button id="retry-camera" class="retry-btn">Enable Camera</button>
+            </div>
             <div id="subtitle-overlay" class="subtitle-overlay">
                 <p id="subtitle-text"></p>
             </div>
